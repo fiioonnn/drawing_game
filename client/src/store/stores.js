@@ -1,5 +1,7 @@
 import { writable } from "svelte/store";
 
+export const version = writable("1.0.0");
+
 export const client = writable({
 	socket: null,
 });

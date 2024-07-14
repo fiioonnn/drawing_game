@@ -1,5 +1,11 @@
+<script>
+	import { version } from "../store/stores";
+</script>
+
 <div class="watermark">
-	<p class="watermark__text">A sbooky game</p>
+	<div class="watermark__info">
+		<p><span>A sbooky.io game</span>Version: {$version}</p>
+	</div>
 	<div class="watermark__logo">
 		<svg
 			width="36"
@@ -64,3 +70,39 @@
 		</svg>
 	</div>
 </div>
+
+<style>
+	.watermark {
+		position: fixed;
+		pointer-events: none;
+		opacity: 0.25;
+		bottom: 20px;
+		left: 20px;
+		display: flex;
+		align-items: center;
+		flex-direction: row-reverse;
+		gap: 10px;
+	}
+	.watermark__logo {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+		text-transform: uppercase;
+	}
+
+	.watermark__logo svg {
+		width: 36px;
+		height: 44px;
+	}
+	.watermark__info p {
+		font-weight: 700;
+		text-transform: uppercase;
+		margin: 0;
+	}
+	.watermark__info span {
+		display: block;
+		letter-spacing: 2px;
+		font-size: 12px;
+		font-weight: 400;
+	}
+</style>

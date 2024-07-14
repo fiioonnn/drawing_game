@@ -4,7 +4,7 @@
 
 <div class="watermark">
 	<div class="watermark__info">
-		<p><span>A sbooky.io game</span>Version: {$version}</p>
+		<p><span>A <b>sbooky.io</b> game</span>Version: {$version}</p>
 	</div>
 	<div class="watermark__logo">
 		<svg
@@ -97,12 +97,16 @@
 	.watermark__info p {
 		font-weight: 700;
 		text-transform: uppercase;
+		letter-spacing: 2px;
 		margin: 0;
 	}
 	.watermark__info span {
 		display: block;
-		letter-spacing: 2px;
 		font-size: 12px;
 		font-weight: 400;
+	}
+
+	.watermark__info b {
+		font-weight: 700 !important;
 	}
 </style>

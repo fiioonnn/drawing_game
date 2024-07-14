@@ -39,9 +39,6 @@ export default {
 		file: "public/build/bundle.js",
 	},
 	plugins: [
-		consts({
-			test: "test",
-		}),
 		svelte({
 			compilerOptions: {
 				// enable run-time checks when not in production

@@ -1,11 +1,18 @@
 <script>
 	import { color } from "../store/stores.js";
+	import { clickOutside } from "../lib/clickOutside.js";
 
+	export let textOnly = false;
 	export let active = false;
 	export let toggle = false;
 	export let parent = false;
 	export let icon = "";
 	export let fn = () => {};
+
+	function handleClick(event) {
+		active = !active;
+		fn(event);
+	}
 </script>
 
 <button
@@ -13,10 +20,10 @@
 	class:toolbar__item--active={active && (toggle || parent)}
 	class:toolbar__item--toggle={toggle}
 	class:toolbar__item--parent={parent}
-	on:click|self={() => {
-		active = !active;
-		fn();
-	}}
+	class:toolbar__item--text-only={textOnly}
+	use:clickOutside
+	on:click_outside={() => parent && (active = false)}
+	on:click|self={handleClick}
 	style="--color: {$color}"
 >
 	<slot />
@@ -36,6 +43,26 @@
 		place-content: center;
 	}
 
+	:global(.toolbar__item--text-only) {
+		background: transparent;
+		color: var(--text);
+		font-weight: 700;
+		width: auto !important;
+	}
+	:global(.toolbar__item--text-only p) {
+		display: flex;
+		gap: 5px;
+		width: auto;
+		padding: 0 10px;
+	}
+
+	:global(.toolbar__item--text-only span) {
+		color: #48d643;
+	}
+
+	.toolbar__item--text-only::after {
+		display: none;
+	}
 	.toolbar__item > .toolbar {
 		display: none;
 		position: absolute;

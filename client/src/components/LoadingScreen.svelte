@@ -4,7 +4,7 @@
 
 <div class="loading-screen">
 	<div class="loading-screen__loader"></div>
-	<p class="loading-screen__text">{$loadingText}<span>Please</span></p>
+	<p class="loading-screen__text">{$loadingText}<span>Please wait</span></p>
 </div>
 
 <style>

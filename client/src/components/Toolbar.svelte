@@ -1,6 +1,12 @@
 <script>
 	import { onMount } from "svelte";
-	import { isDrawing, color, size, tool } from "./../store/stores.js";
+	import {
+		isDrawing,
+		color,
+		size,
+		tool,
+		onlineCount,
+	} from "./../store/stores.js";
 	import ToolbarItem from "./ToolbarItem.svelte";
 
 	$: sizeIcon = getSizeIcon($size);
@@ -23,9 +29,7 @@
 	<ToolbarItem
 		icon="eraser"
 		toggle={true}
-		fn={() => {
-			tool.update((tool) => (tool === "eraser" ? "pen" : "eraser"));
-		}}
+		fn={() => ($tool === "eraser" ? tool.set("pen") : tool.set("eraser"))}
 	/>
 	<ToolbarItem icon={sizeIcon} parent={true}>
 		<div class="toolbar toolbar--sub">
@@ -43,6 +47,9 @@
 			<ToolbarItem icon="colors-green" fn={() => color.set("#26ac26")} />
 			<ToolbarItem icon="colors-blue" fn={() => color.set("#196bc9")} />
 		</div>
+	</ToolbarItem>
+	<ToolbarItem textOnly={true}>
+		<p><span>{$onlineCount}</span> Online</p>
 	</ToolbarItem>
 </div>
 

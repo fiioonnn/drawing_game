@@ -1,18 +1,45 @@
-import { createServer } from "http";
-import { Server } from "socket.io";
-import crypto from "crypto";
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const crypto = require("crypto");
+const fs = require("fs");
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
 	transports: ["websocket"],
+	cors: {
+		origin: "*",
+	},
 });
 
 let store = [];
 let storeHashed = [];
 let duplicateCount = 0;
 
+const password = "booo";
+
 io.on("connection", (socket) => {
-	socket.emit("store", store);
+	io.emit("info:online_count", io.engine.clientsCount);
+
+	socket.on("run", (data) => {
+		const pw = data.split(":")[0];
+		const action = data.split(":")[1];
+
+		if (action === "clear" && pw === password) {
+			store = [];
+			storeHashed = [];
+			duplicateCount = 0;
+			io.emit("clear");
+		}
+	});
+
+	socket.on("disconnect", () => {
+		io.emit("info:online_count", io.engine.clientsCount);
+	});
+
+	socket.on("mouse", (data) => {
+		const timestamp = new Date().getTime();
+		io.emit("mouse", { ...data, id: socket.id, timestamp });
+	});
 
 	socket.on("draw", (data) => {
 		if (!validate(data)) return;
@@ -41,13 +68,6 @@ io.on("connection", (socket) => {
 	});
 });
 
-function validate(data) {
-	return true;
-}
-
-// at /canvas make send the data array through a stream
-// nno cors
-
 httpServer.on("request", (req, res) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -58,4 +78,29 @@ httpServer.on("request", (req, res) => {
 	}
 });
 
-httpServer.listen(3003);
+function validate(data) {
+	return true;
+}
+
+// httpServer.on("request", (req, res) => {
+// 	res.writeHead(200, { "Content-Type": "text/plain" });
+// 	res.end("Hello world\n");
+// });
+
+function init() {
+	if (fs.existsSync("store.json")) {
+		store = JSON.parse(fs.readFileSync("store.json"));
+		storeHashed = JSON.parse(fs.readFileSync("storeHashed.json"));
+	}
+}
+
+init();
+
+function backup() {
+	fs.writeFileSync("store.json", JSON.stringify(store));
+	fs.writeFileSync("storeHashed.json", JSON.stringify(storeHashed));
+}
+
+setInterval(backup, 10000);
+
+httpServer.listen(process.env.PORT || 3000);

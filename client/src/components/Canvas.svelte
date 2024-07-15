@@ -7,6 +7,7 @@
 		isDrawing,
 		client,
 		loadingText,
+		serverUrl,
 	} from "../store/stores";
 	import { socket } from "../lib/socket";
 
@@ -25,6 +26,14 @@
 		};
 
 		let prevPoint;
+
+		socket.on("clear", () => {
+			loadingText.set("Clearing canvas...");
+			setTimeout(() => {
+				loadingText.set("");
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			}, 1000);
+		});
 
 		socket.on("draw", (data) => {
 			ctx.strokeStyle = data.color;
@@ -89,7 +98,7 @@
 	};
 
 	const load = () => {
-		const req = fetch("http://localhost:3003/canvas", {
+		const req = fetch(`${$serverUrl}/canvas`, {
 			signal: AbortSignal.timeout(10000),
 		});
 
@@ -127,9 +136,9 @@
 
 				loadingText.set("");
 
-				// if (!data.length) {
-				// 	loadingText.set("");
-				// }
+				if (!data.length) {
+					loadingText.set("");
+				}
 			})
 			.catch((err) => {
 				loadingText.set("Failed to load canvas");
